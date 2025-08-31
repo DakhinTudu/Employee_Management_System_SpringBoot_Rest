@@ -16,8 +16,12 @@ import com.ems.model.Users;
 import com.ems.service.AuthService;
 import com.ems.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("api/auth")
+@Tag(name = "Auth", description = "Auth management APIs")
 public class AuthController {
 
 	private UserService userService;
@@ -29,12 +33,14 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
+	@Operation(summary = "Sign up", description = "sign up as new user(Admin)")
 	public ResponseEntity<ApiResponse<Users>> signup(@RequestBody Users user) {
 		Users savedUser = userService.saveUser(user.getUsername(), user.getPassword());
 		return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", savedUser));
 	}
 
 	@PostMapping("/login")
+	@Operation(summary = "Login", description = "Log in into the system as admin")
 	public ResponseEntity<ApiResponse<String>> login(@RequestBody Users user) {
 		String token = userService.verifyUser(user);
 		if (token.startsWith("User verification failed")) {

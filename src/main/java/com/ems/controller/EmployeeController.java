@@ -23,8 +23,12 @@ import com.ems.dto.EmployeeUpdateDTO;
 import com.ems.model.Employee;
 import com.ems.service.EmployeeService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/employees")
+@Tag(name = "Employees", description = "Employee management APIs")
 public class EmployeeController {
 
 	private final EmployeeService empService;
@@ -35,6 +39,7 @@ public class EmployeeController {
 
 	// get all employees
 	@GetMapping
+	@Operation(summary = "Get all employees", description = "Fetch all employees")
 	public ResponseEntity<ApiResponse<Page<Employee>>> getEmployees(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
 		PageRequest pageable = PageRequest.of(page, size);
@@ -45,6 +50,7 @@ public class EmployeeController {
 	// get employee by empId
 
 	@GetMapping("/empId/{empId}")
+	@Operation(summary = "Get employee by empId", description = "Fetch employee details using employee empId")
 	public ResponseEntity<ApiResponse<?>> getEmployeeByEmpId(@PathVariable("empId") String empId) {
 
 		try {
@@ -63,6 +69,7 @@ public class EmployeeController {
 	// get employee by name
 
 	@GetMapping("/name/{name}")
+	@Operation(summary = "Get employee by name", description = "Fetch employee details using employee's name")
 	public ResponseEntity<ApiResponse<List<Employee>>> getEmployeeByName(@PathVariable String name) {
 		try {
 			List<Employee> employee = empService.getEmployeeByName(name);
@@ -76,6 +83,7 @@ public class EmployeeController {
 	// get employee by email
 
 	@GetMapping("/email/{email}")
+	@Operation(summary = "Get employee by email", description = "Fetch employee details using employee's email")
 	public ResponseEntity<ApiResponse<Employee>> getEmployeeByEmail(@PathVariable String email) {
 		try {
 			Employee employee = empService.getEmployeeByEmail(email);
@@ -88,6 +96,7 @@ public class EmployeeController {
 
 	// register new employee
 	@PostMapping("/register")
+	@Operation(summary = "register new employee", description = "Register an employee into the system")
 	public ResponseEntity<ApiResponse<?>> registerEmployee(@RequestBody EmployeeRegisterDTO empDto) {
 		Employee employee = empService.registerEmployee(empDto);
 		return ResponseEntity.ok(new ApiResponse<>(true, "Employee Registered Successfully", employee));
@@ -95,6 +104,7 @@ public class EmployeeController {
 
 	// update employee
 	@PutMapping("update/{empId}")
+	@Operation(summary = "Update the employee", description = "Update update-able employee's detailes")
 	public ResponseEntity<ApiResponse<?>> updateEmployee(@PathVariable String empId,
 			@RequestBody EmployeeUpdateDTO empDto) {
 		try {
@@ -109,6 +119,7 @@ public class EmployeeController {
 
 	// delete employee
 	@DeleteMapping("/delete/{empId}")
+	@Operation(summary = "Delete employee by empId", description = "Delete employee from system using employee empId")
 	public ResponseEntity<ApiResponse<?>> deleteEmployee(@PathVariable String empId) {
 		try {
 			empService.deleteEmployeeByEmpId(empId);

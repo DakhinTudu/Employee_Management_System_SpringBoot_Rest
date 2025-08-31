@@ -39,16 +39,18 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	    return http
-	            .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless API
-	            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No session
-	            .authorizeHttpRequests(auth -> auth
-	                    .requestMatchers("/api/auth/signup", "/api/auth/login").permitAll()
-	                    .anyRequest().authenticated()
-	            )
-	            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-	            .build();
+		return http.csrf(csrf -> csrf.disable()) // Disable CSRF for stateless API
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No
+																												// session
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/api/auth/signup", "/api/auth/login", "/swagger-ui/**",
+				                "/api-docs/**",
+				                "/swagger-resources/**",
+				                "/webjars/**")
+						.permitAll().anyRequest().authenticated())
+				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
+
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();

@@ -17,8 +17,12 @@ import com.ems.dto.UserDto;
 import com.ems.model.Users;
 import com.ems.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("api/users")
+@Tag(name = "User", description = "User Management APIs")
 public class UserController {
 
 	private UserService userService;
@@ -28,7 +32,9 @@ public class UserController {
 		this.userService = userService;
 	}
 
+	
 	@GetMapping("/{username}")
+	@Operation(summary = "Get user by id", description = "Fetch user details using id")
 	public ResponseEntity<ApiResponse<UserDto>> getUser(@PathVariable String username) {
 		UserDto user = userService.getUserByUsername(username);
 		if (user != null)
@@ -37,6 +43,7 @@ public class UserController {
 	}
 
 	@GetMapping
+	@Operation(summary = "Get all users", description = "Fetch all the user details")
 	public ResponseEntity<ApiResponse<List<UserDto>>> getAllUsers() {
 		List<UserDto> users = userService.getAllUsers();
 		if (users.isEmpty()) {
@@ -46,6 +53,7 @@ public class UserController {
 	}
 
 	@PutMapping("/update")
+	@Operation(summary = "Update User", description = "Update user details")
 	public ResponseEntity<ApiResponse<Users>> updateUser(@RequestBody Users user) {
 		Users updatedUser = userService.updateUser(user);
 		if (updatedUser == null) {
@@ -55,6 +63,7 @@ public class UserController {
 	}
 
 	@DeleteMapping("/delete/{username}")
+	@Operation(summary = "Delete user by username", description = "Delete user from system by username")
 	public ResponseEntity<ApiResponse<String>> deleteUser(@PathVariable String username) {
 		String result = userService.deleteUser(username);
 		if (result.startsWith("User not found")) {
